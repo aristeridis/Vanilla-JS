@@ -1,0 +1,165 @@
+! <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    div {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #taskList {
+      border-top: 1px solid #ccc;
+      padding-top: 15px;
+    }
+
+    .taskItem {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .taskStatus {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+</style>
+</head>
+
+<body>
+    <h1>Task Manager</h1>
+    <div>
+        <p id="welcome"></p>
+        <label for="taskTitle">Task Title:</label>
+        <input type="text" id="taskTitle"><!--B-->
+        <label for="taskDescription">Task Description:</label>
+        <input type="text" id="taskDescription">
+        <button onclick="addTask()">Add Task</button><!--C-->
+        </div>
+        <div id="taskList">
+            <!-- Task list will be displayed here -->
+        </div>
+        
+        <script>
+           function welcome(){//A
+const welcome="ΚΑΛΩΣΗΡΘΑΤΕ";
+               document.getElementById("welcome").innerHTML=welcome;
+           }
+welcome();
+    function Task(title, description) {//C/d
+      this.title = title;
+    this.description = description;
+    this.status = "Incomplete";//C/d/i
+    }
+
+    var tasksArray = [];//C/d/a
+
+    function addTask() {//C/a
+      
+        var title = document.getElementById("taskTitle").value;
+    var description = document.getElementById("taskDescription").value;
+
+   
+    if (title.trim() !== '' && description.trim() !== '') {//C/b
+            if (isTitleUnique(title)) {//C/c
+                var newTask = new Task(title, description);
+
+    tasksArray.push(newTask);
+
+    var taskItem = document.createElement("div");
+    taskItem.className = "taskItem";
+
+    taskItem.innerHTML = '<span class="taskTitle">' + newTask.title + '</span>' +
+    '<span class="taskDescription">' + newTask.description + '</span>' +
+    '<span class="taskStatus">Status: ' + newTask.status + '</span>' +
+    '<button onclick="updateStatus(\'' + newTask.title + '\')">Change Status</button>';
+
+    document.getElementById("taskList").appendChild(taskItem);
+
+    document.getElementById("taskTitle").value = '';
+    document.getElementById("taskDescription").value = '';
+            } else {
+      alert("Το όνομα του TASK υπάρχει ήδη");
+            }
+        } else {
+      alert("Εισάγετε και τα δύο πεδία.");
+        }
+    }
+
+    function isTitleUnique(title) {//C/d/a
+        return !tasksArray.some(function(task) {
+            return task.title === title;
+        });
+    }
+
+    function updateStatus(title) {
+        var taskToUpdate = tasksArray.find(function(task) {
+            return task.title === title;
+        });
+//D
+    taskToUpdate.status = (taskToUpdate.status === "Incomplete") ? "Complete" : "Incomplete";
+
+    displayTasks();
+    }
+
+    function displayTasks() {//C/d/b
+       var taskContainer = document.getElementById("taskList");
+
+    taskContainer.innerHTML = '';
+
+    tasksArray.forEach(function(task) {
+            var taskItem = document.createElement("div");
+    taskItem.className = "taskItem";
+
+    taskItem.innerHTML = '<span class="taskTitle">' + task.title + '</span>' +
+    '<span class="taskDescription">' + task.description + '</span>' +
+    '<span class="taskStatus">Status: ' + task.status + '</span>' +
+    '<button onclick="updateStatus(\'' + task.title + '\')">Change Status</button>';
+
+    taskContainer.appendChild(taskItem);
+        });
+    }
+</script>
+
+        </body>
+        
+        </html>
